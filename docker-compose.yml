@@ -1,0 +1,30 @@
+#  docker-compose -p backend-comp3123 -f docker-compose.yml up -d
+
+
+version: "3.8"
+
+services:
+  backend3123:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - mongo_db3123
+    volumes:
+      - ./backend:/app
+    restart: always
+
+  mongo_db3123:
+    image: mongo
+    container_name: mongo_db3123
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongoData:/data/db
+
+volumes:
+  mongoData:
