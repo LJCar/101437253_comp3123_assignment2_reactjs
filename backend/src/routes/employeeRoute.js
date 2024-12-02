@@ -8,14 +8,16 @@ const {
 } = require('../controllers/employeeController');
 const { employeeCreationValidation } = require('../validators/employeeValidator');
 const { validate } = require('../middleware/validationMiddleware');
+const authMiddleware = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-// Routes
-router.get('/employees', getAllEmployees); // No validation needed for GET
+router.use(authMiddleware);
+
+router.get('/employees', getAllEmployees);
 router.post('/employees', validate(employeeCreationValidation), createEmployee);
-router.get('/employees/:id', getEmployeeById); // Add validation if needed
-router.put('/employees/:id', updateEmployee); // Add validation if needed
-router.delete('/employees/:id', deleteEmployee); // Add validation if needed
+router.get('/employees/:id', getEmployeeById);
+router.put('/employees/:id', validate(employeeCreationValidation), updateEmployee);
+router.delete('/employees/:id', deleteEmployee);
 
 module.exports = router;

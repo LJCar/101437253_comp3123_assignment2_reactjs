@@ -23,15 +23,15 @@ const signup = async (req, res) => {
 };
 
 const login = async (req, res) => {
-    const { username, email, password } = req.body;
+    const { identifier, password } = req.body;
     try {
-        const user = await User.findOne({ $or: [{ username }, { email }] });
+        const user = await User.findOne({ $or: [{ username: identifier }, { email: identifier }] });
         if (!user) return res.status(400).json({ message: 'Invalid username or password' });
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ message: 'Invalid username or password' });
 
-        const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '3h' });
+        const token = jwt.sign({ userId: user._id, email: user.email }, JWT_SECRET, { expiresIn: '3h' });
         res.status(200).json({ message: 'Login successful', token });
     } catch (err) {
         res.status(500).json({ message: 'Server error', error: err });

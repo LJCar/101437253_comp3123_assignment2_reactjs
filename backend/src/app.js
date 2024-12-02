@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const connectDB = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
 const employeeRoutes = require('./routes/employeeRoute');
@@ -14,6 +15,13 @@ const app = express();
         process.exit(1);
     }
 })();
+
+// Allow Connection for frontend
+app.use(cors({
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+}));
 
 app.use(express.json());
 

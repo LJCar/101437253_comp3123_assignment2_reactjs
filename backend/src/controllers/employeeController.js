@@ -13,7 +13,7 @@ const createEmployee = async (req, res) => {
     try {
         const employee = new Employee(req.body);
         await employee.save();
-        res.status(201).json({ message: 'Employee created successfully', employeeId: employee._id });
+        res.status(201).json({ message: 'Employee created successfully' });
     } catch (err) {
         res.status(500).json({ message: 'Server error', error: err });
     }
@@ -31,8 +31,13 @@ const getEmployeeById = async (req, res) => {
 
 const updateEmployee = async (req, res) => {
     try {
-        const updatedEmployee = await Employee.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const updatedEmployee = await Employee.findByIdAndUpdate(
+            req.params.id, {...req.body, updated_at: new Date()},
+            { new: true }
+        );
+
         if (!updatedEmployee) return res.status(404).json({ message: 'Employee not found' });
+
         res.status(200).json({ message: 'Employee updated successfully', updatedEmployee });
     } catch (err) {
         res.status(500).json({ message: 'Server error', error: err });

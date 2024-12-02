@@ -26,5 +26,15 @@ services:
     volumes:
       - mongoData:/data/db
 
+  frontend3123:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+    restart: always
+
 volumes:
   mongoData:
